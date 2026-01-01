@@ -1,29 +1,27 @@
 """Calories calculator."""
-from __future__ import annotations
+from typing import Union
 import datetime as dt
 
-FORMAT = "%H:%M:%S"
-WEIGHT = 75  # Вес
-HEIGHT = 175  # Рост
-K_1 = 0.035  # Коэффициент для подсчета калорий
-K_2 = 0.029  # Коэффициент для подсчета калорий
-STEP_M = 0.65  # Длина шага в метрах
+FORMAT: str = "%H:%M:%S"
+WEIGHT: int = 75  # Вес
+HEIGHT: int = 175  # Рост
+K_1: float = 0.035  # Коэффициент для подсчета калорий
+K_2: float = 0.029  # Коэффициент для подсчета калорий
+STEP_M: float = 0.65  # Длина шага в метрах
 
-storage_data = {}
+storage_data: dict[dt.time, int] = {}
 
 
-def check_correct_data(data: tuple[str | None, int]) -> bool:
+def check_correct_data(data: tuple[Union[str, None], int]) -> bool:
     """Проверка корректности полученного пакета."""
-    if len(data) != 2 or \
-            None in data:
+    if len(data) != 2 or None in data:
         return False
     return True
 
 
 def check_correct_time(time: dt.time) -> bool:
     """Проверка корректности параметра времени."""
-    if storage_data and \
-            time <= max(storage_data):
+    if storage_data and time <= max(storage_data):
         return False
     return True
 
@@ -69,7 +67,7 @@ def show_message(time: dt.time, steps: int, dist: float,
         ''')
 
 
-def accept_package(data: tuple[str | None, int]) -> str | dict:
+def accept_package(data: tuple[Union[str, None], int]) -> Union[dict, str]:
     """Обработать пакет данных."""
     if not check_correct_data(data):
         return 'Некорректный пакет'
@@ -92,14 +90,15 @@ def accept_package(data: tuple[str | None, int]) -> str | dict:
 
 
 # Пример запуска
-package_0 = ('2:00:01', 505)
-package_1 = (None, 3211)
-package_2 = ('9:36:02', 15000)
-package_3 = ('9:36:02', 9000)
-package_4 = ('8:01:02', 7600)
+if __name__ == '__main__':
+    package_0 = ('2:00:01', 505)
+    package_1 = (None, 3211)
+    package_2 = ('9:36:02', 15000)
+    package_3 = ('9:36:02', 9000)
+    package_4 = ('8:01:02', 7600)
 
-accept_package(package_0)
-accept_package(package_1)
-accept_package(package_2)
-accept_package(package_3)
-accept_package(package_4)
+    accept_package(package_0)
+    accept_package(package_1)
+    accept_package(package_2)
+    accept_package(package_3)
+    accept_package(package_4)
