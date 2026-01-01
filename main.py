@@ -1,5 +1,6 @@
+"""Calories calculator."""
+from __future__ import annotations
 import datetime as dt
-
 
 FORMAT = "%H:%M:%S"
 WEIGHT = 75  # Вес
@@ -11,7 +12,7 @@ STEP_M = 0.65  # Длина шага в метрах
 storage_data = {}
 
 
-def check_correct_data(data):
+def check_correct_data(data: tuple[str | None, int]) -> bool:
     """Проверка корректности полученного пакета."""
     if len(data) != 2 or \
             None in data:
@@ -19,7 +20,7 @@ def check_correct_data(data):
     return True
 
 
-def check_correct_time(time):
+def check_correct_time(time: dt.time) -> bool:
     """Проверка корректности параметра времени."""
     if storage_data and \
             time <= max(storage_data):
@@ -27,25 +28,25 @@ def check_correct_time(time):
     return True
 
 
-def get_step_day(steps):
+def get_step_day(steps: int) -> int:
     """Получить количество пройденных шагов за день."""
     day_steps = sum(value for value in storage_data.values())
     return day_steps + steps
 
 
-def get_distance(steps):
+def get_distance(steps: int) -> float:
     """Получить дистанцию пройденного пути в км."""
     return steps * STEP_M / 1000
 
 
-def get_spent_calories(dist, current_time):
+def get_spent_calories(dist: float, current_time: dt.time) -> float:
     """Получить значения потраченных калорий."""
     time = current_time.hour + current_time.minute / 60
     mean_speed = (dist / time)
     return (K_1 + (mean_speed ** 2 // HEIGHT) * K_2) * WEIGHT * time * 60
 
 
-def get_achievement(dist):
+def get_achievement(dist: float) -> str:
     """Получить поздравления за пройденную дистанцию."""
     if dist < 2:
         return 'Лежать тоже полезно. Главное — участие, а не победа!'
@@ -56,18 +57,19 @@ def get_achievement(dist):
     return 'Отличный результат! Цель достигнута.'
 
 
-def show_message(time, steps, dist, calories, achiev):
-    """Вывести на экран результаты вычислений"""
+def show_message(time: dt.time, steps: int, dist: float,
+                 calories: float, achievement: str) -> None:
+    """Вывести на экран результаты вычислений."""
     print(f'''
 Время: {time}.
 Количество шагов за сегодня: {steps}.
 Дистанция составила {dist:.2f} км.
 Вы сожгли {calories:.2f} ккал.
-{achiev}
+{achievement}
         ''')
 
 
-def accept_package(data):
+def accept_package(data: tuple[str | None, int]) -> str | dict:
     """Обработать пакет данных."""
     if not check_correct_data(data):
         return 'Некорректный пакет'
